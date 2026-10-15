@@ -25,8 +25,8 @@ if exist "%APPDATA%\Typeless.exe\Local Storage" rd /s /q "%APPDATA%\Typeless.exe
 if exist "%APPDATA%\Typeless.exe\Network" del /f /q "%APPDATA%\Typeless.exe\Network\Cookies*" >nul 2>&1
 if exist "%APPDATA%\Typeless.exe\.updaterId" del /f /q "%APPDATA%\Typeless.exe\.updaterId" >nul 2>&1
 
-echo [5/5] 正在清理本地配置残留...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$p = Join-Path $env:APPDATA 'Typeless.exe\app-storage.json'; if (Test-Path $p) { try { $j = Get-Content -Raw -Encoding UTF8 -Path $p | ConvertFrom-Json; if ($j.PSObject.Properties['userData']) { $j.PSObject.Properties.Remove('userData') }; if ($j.PSObject.Properties['quotaUsage']) { $j.PSObject.Properties.Remove('quotaUsage') }; $j | ConvertTo-Json -Depth 20 | Set-Content -Encoding UTF8 -Path $p } catch {} }" >nul 2>&1
+echo [5/5] 正在清理本地配置残留 (写入纯净无 BOM UTF-8)...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$p = [System.IO.Path]::Combine($env:APPDATA, 'Typeless.exe', 'app-storage.json'); if (Test-Path $p) { try { $raw = [System.IO.File]::ReadAllText($p); $j = ConvertFrom-Json $raw; if ($j.PSObject.Properties['userData']) { $j.PSObject.Properties.Remove('userData') }; if ($j.PSObject.Properties['quotaUsage']) { $j.PSObject.Properties.Remove('quotaUsage') }; $out = ConvertTo-Json $j -Depth 20; [System.IO.File]::WriteAllText($p, $out) } catch {} }" >nul 2>&1
 
 echo.
 echo ======================================================================
