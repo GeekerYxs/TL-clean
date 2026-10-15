@@ -1,6 +1,6 @@
 # TL-clean: Typeless 设备标识一键重置工具 (Windows 11 / 10)
 
-> 解除 Typeless Windows 端多账号登录限制，解决 `"The number of users logged into this device has exceeded the limit."` 错误，让服务端将本机识别为全新设备。
+> 解除 Typeless Windows 端多账号登录限制，解决 `"The number of users logged into this device has exceeded the limit."` 错误，让服务端将本机识别为全新设备，并**自动跳过强制新手引导教程**。
 > 
 > 针对 Windows 系统专属定制，填补社区方案大多仅支持 macOS 的空白。
 
@@ -27,8 +27,9 @@ The number of users logged into this device has exceeded the limit.
 ## ✨ 特性
 
 - **零依赖，双击即用**：采用 Windows 原生批处理（`.bat`）与内置 PowerShell，不需要安装 Node.js、Python 或任何第三方运行环境。
+- **自动跳过新手引导教程**：自动将本地 `app-onboarding.json` 状态预设为完成（`isCompleted: true`），新号登录后直接进入正常界面，告别每次换号强制走一遍新手教程的烦恼。
 - **保护历史记录**：**不暴力清空整个数据目录**，精准清除设备指纹与登录会话，完整保留你的本地历史录音文件与转写数据库（`typeless.db`）。
-- **编码防乱码优化**：针对 Windows CMD 环境进行了控制台编码与 CRLF 换行适配，双击运行不乱码、不闪退。
+- **编码防乱码优化**：针对 Windows CMD 环境进行了控制台编码与 CRLF 换行适配，无 BOM UTF-8 保存，双击运行不乱码、不闪退。
 
 ---
 
@@ -37,7 +38,7 @@ The number of users logged into this device has exceeded the limit.
 1. 从本仓库下载 [`reset-device-windows.bat`](./reset-device-windows.bat)（或点击右上角 Code -> Download ZIP 解压）；
 2. **直接双击运行 `reset-device-windows.bat`**；
 3. 按照提示等待脚本执行完毕（约 1~2 秒）；
-4. 重新启动 Typeless 客户端，此时客户端已生成全新设备指纹，输入新账号登录即可。
+4. 重新启动 Typeless 客户端，此时客户端已生成全新设备指纹且新手教程已自动跳过，输入新账号登录即可。
 
 ---
 
@@ -48,6 +49,7 @@ The number of users logged into this device has exceeded the limit.
 | **持久化凭据** | macOS Keychain (`now.typeless.desktop.deviceIdentifier`) | Windows 凭据管理器 (`Typeless.deviceIdentifier`) |
 | **设备缓存文件** | `~/Library/Application Support/now.typeless.desktop/device.cache` | `%APPDATA%\Typeless\Cache\device.cache` |
 | **登录会话状态** | `~/Library/Application Support/Typeless/user-data.json` | `%APPDATA%\Typeless.exe\user-data.json` & `app-storage.json` |
+| **新手教程状态** | `~/Library/Application Support/Typeless/app-onboarding.json` | `%APPDATA%\Typeless.exe\app-onboarding.json` (`isCompleted: true`) |
 | **重置触发逻辑** | 清除 Keychain + cache，下次启动生成新 UUID | 清除 Windows 凭据 + cache，下次启动通过 `CoCreateGuid()` 生成新 UUID |
 
 ---
@@ -67,6 +69,7 @@ The number of users logged into this device has exceeded the limit.
 ## 🤝 致谢与参考
 
 - 启发与 macOS 实现参考：[estarpro1022/typeless-reset-device](https://github.com/estarpro1022/typeless-reset-device)
+- 桌面端多账号架构维护参考：[Jia131313/typeless-toolkit](https://github.com/Jia131313/typeless-toolkit)
 
 ---
 
