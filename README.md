@@ -1,8 +1,8 @@
 # TL-clean: Typeless 设备标识一键重置工具 (Windows 11 / 10)
 
-> 解除 Typeless Windows 端多账号登录限制，解决 `"The number of users logged into this device has exceeded the limit."` 错误，让服务端将本机识别为全新设备，并**自动跳过强制新手引导教程**。
+> 解除 Typeless Windows 端多账号登录限制，解决 `"The number of users logged into this device has exceeded the limit."` 错误，使客户端启动时自动生成全新的设备 UUID。
 > 
-> 针对 Windows 系统专属定制，填补社区方案大多仅支持 macOS 的空白。
+> 提供**「自动跳过新手引导教程」**与**「保留新手引导教程」**双版本，自由选择。
 
 ---
 
@@ -24,10 +24,15 @@ The number of users logged into this device has exceeded the limit.
 
 ---
 
-## ✨ 特性
+## ✨ 两个版本特性
+
+| 脚本文件 | 模式说明 | 适用人群 |
+| :--- | :--- | :--- |
+| **`reset-device-skip-tutorial.bat`** | **自动跳过新手教程**<br>重置设备后预设完成状态，登录后直接进入主界面 | 老用户、频繁换号调试，不需要重复看教程 |
+| **`reset-device-with-tutorial.bat`** | **保留/显示新手教程**<br>重置设备同时清理引导记录，登录后正常触发完整新手引导向导 | 新手用户、想重新熟悉 Typeless 打字功能与快捷键 |
+| **`reset-device-windows.bat`** | **交互式总入口**<br>双击运行后可在控制台中按 `1` 或 `2` 选择上述任一模式 | 喜欢一个文件集成所有功能的用户 |
 
 - **零依赖，双击即用**：采用 Windows 原生批处理（`.bat`）与内置 PowerShell，不需要安装 Node.js、Python 或任何第三方运行环境。
-- **自动跳过新手引导教程**：自动将本地 `app-onboarding.json` 状态预设为完成（`isCompleted: true`），新号登录后直接进入正常界面，告别每次换号强制走一遍新手教程的烦恼。
 - **保护历史记录**：**不暴力清空整个数据目录**，精准清除设备指纹与登录会话，完整保留你的本地历史录音文件与转写数据库（`typeless.db`）。
 - **编码防乱码优化**：针对 Windows CMD 环境进行了控制台编码与 CRLF 换行适配，无 BOM UTF-8 保存，双击运行不乱码、不闪退。
 
@@ -35,10 +40,12 @@ The number of users logged into this device has exceeded the limit.
 
 ## 🚀 使用方法
 
-1. 从本仓库下载 [`reset-device-windows.bat`](./reset-device-windows.bat)（或点击右上角 Code -> Download ZIP 解压）；
-2. **直接双击运行 `reset-device-windows.bat`**；
-3. 按照提示等待脚本执行完毕（约 1~2 秒）；
-4. 重新启动 Typeless 客户端，此时客户端已生成全新设备指纹且新手教程已自动跳过，输入新账号登录即可。
+1. 从本仓库下载对应的 `.bat` 脚本（或点击右上角 **Code -> Download ZIP** 解压）：
+   - 如果想**直接跳过新手教程**：双击运行 [`reset-device-skip-tutorial.bat`](./reset-device-skip-tutorial.bat)；
+   - 如果想**保留并显示新手教程**：双击运行 [`reset-device-with-tutorial.bat`](./reset-device-with-tutorial.bat)；
+   - 或者双击运行 [`reset-device-windows.bat`](./reset-device-windows.bat)，输入 `1` 或 `2` 自由选择。
+2. 按照屏幕提示等待脚本执行完毕（约 1~2 秒）；
+3. 重新启动 Typeless 客户端，此时客户端已生成全新设备指纹，输入新账号登录即可。
 
 ---
 
@@ -49,7 +56,7 @@ The number of users logged into this device has exceeded the limit.
 | **持久化凭据** | macOS Keychain (`now.typeless.desktop.deviceIdentifier`) | Windows 凭据管理器 (`Typeless.deviceIdentifier`) |
 | **设备缓存文件** | `~/Library/Application Support/now.typeless.desktop/device.cache` | `%APPDATA%\Typeless\Cache\device.cache` |
 | **登录会话状态** | `~/Library/Application Support/Typeless/user-data.json` | `%APPDATA%\Typeless.exe\user-data.json` & `app-storage.json` |
-| **新手教程状态** | `~/Library/Application Support/Typeless/app-onboarding.json` | `%APPDATA%\Typeless.exe\app-onboarding.json` (`isCompleted: true`) |
+| **新手教程状态** | `~/Library/Application Support/Typeless/app-onboarding.json` | `%APPDATA%\Typeless.exe\app-onboarding.json` |
 | **重置触发逻辑** | 清除 Keychain + cache，下次启动生成新 UUID | 清除 Windows 凭据 + cache，下次启动通过 `CoCreateGuid()` 生成新 UUID |
 
 ---
